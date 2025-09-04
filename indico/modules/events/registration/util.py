@@ -1154,7 +1154,7 @@ def load_registration_schema(regform, schema_cls, *, registration=None, partial_
 def prepare_participant_list_data(reglist, display, static_items):
     column_names = {
         'reg_date': 'Registration Date',
-        'state': 'Registration State', 
+        'state': 'Registration State',
         'price': 'Price',
         'checked_in': 'Checked in',
         'checked_in_date': 'Check-in Date',
@@ -1162,10 +1162,10 @@ def prepare_participant_list_data(reglist, display, static_items):
     }
 
     headers = ['ID', 'Name']
-    
+
     dynamic_form_items = []
     accommodation_col_counter = 0
-    
+
     for item in display:
         if item.input_type == 'accommodation':
             accommodation_col_counter += 1
@@ -1174,18 +1174,14 @@ def prepare_participant_list_data(reglist, display, static_items):
             headers.append('Departure date')
         else:
             headers.append(item.title)
-        
+
         dynamic_form_items.append(item)
 
-    for item_id in static_items:
-        if item_id in column_names:
-            headers.append(column_names[item_id])
-
+    headers.extend(column_names[item_id] for item_id in static_items if item_id in column_names)
 
     rows = []
     for registration in reglist:
         row = [f'#{registration.friendly_id}', registration.display_full_name]
-        
         reg_data_by_field = registration.data_by_field
         for item in dynamic_form_items:
             reg_data = reg_data_by_field.get(item.id)
